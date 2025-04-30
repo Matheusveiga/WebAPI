@@ -12,36 +12,13 @@ public class ProdutosController : ControllerBase
         _context = context;
     }
 
-    [HttpGet("primeiro")]
-    public ActionResult<Produto> GetPrimeiro()
-    {
-
-        try
-        {
-            var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p=> p.ProdutoID == 1);
-
-            if (produto == null )
-            {
-                return NotFound();
-            }
-
-            return produto;
-        }
-
-        catch
-        {
-            return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao tentar recuperar produtos.");
-        }
-
-    }
 
     [HttpGet]
-    public ActionResult<IEnumerable<Produto>> Get()
+    public async Task<ActionResult<IEnumerable<Produto>>> GetAsync()
     {
-
         try
         {
-            var produtos = _context.Produtos.AsNoTracking().ToList();
+            var produtos = await _context.Produtos.AsNoTracking().ToListAsync();
 
             if (produtos == null || !produtos.Any())
             {
@@ -50,21 +27,19 @@ public class ProdutosController : ControllerBase
 
             return produtos;
         }
-
         catch
         {
             return StatusCode(StatusCodes.Status500InternalServerError, "Erro ao tentar recuperar produtos.");
         }
-
     }
 
-    [HttpGet("{id:int}", Name = "ObterProduto")]
-    public ActionResult<Produto> Get(int id)
+    [HttpGet("{id:int:min(1)}", Name = "ObterProduto")]
+    public async Task<ActionResult<Produto>> GetAsync(int id)
     {
 
         try
         {
-            var produto = _context.Produtos.AsNoTracking().FirstOrDefault(p => p.ProdutoID == id);
+            var produto = await _context.Produtos.AsNoTracking().FirstOrDefaultAsync(p => p.ProdutoID == id);
 
             if (produto == null)
             {
@@ -81,7 +56,7 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPost]
-    public ActionResult Post(Produto produto)
+    public async Task<ActionResult> PostAsync(Produto produto)
     {
 
         try
@@ -91,8 +66,8 @@ public class ProdutosController : ControllerBase
                 return BadRequest("Produto inválido");
             }
 
-            _context.Produtos.Add(produto);
-            _context.SaveChanges();
+            await _context.Produtos.AddAsync(produto);
+            await _context.SaveChangesAsync();
 
             return new CreatedAtRouteResult("ObterProduto", new { id = produto.ProdutoID }, produto);
         }
@@ -106,7 +81,7 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public ActionResult Put(int id, Produto produto)
+    public async Task<ActionResult> PutAsync(int id, Produto produto)
     {
 
         try
@@ -117,7 +92,7 @@ public class ProdutosController : ControllerBase
             }
 
             _context.Entry(produto).State = EntityState.Modified;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return Ok(produto);
         }
@@ -132,12 +107,12 @@ public class ProdutosController : ControllerBase
     }
 
     [HttpDelete("{id:int}")]
-    public ActionResult Delete(int id)
+    public async Task<ActionResult> DeleteAsync(int id)
     {
 
         try
         {
-            var produto = _context.Produtos.FirstOrDefault(p => p.ProdutoID == id);
+            var produto = await _context.Produtos.FirstOrDefaultAsync(p => p.ProdutoID == id);
 
             if (produto is null)
             {
@@ -145,7 +120,7 @@ public class ProdutosController : ControllerBase
             }
 
             _context.Produtos.Remove(produto);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             return Ok("Produto removido com sucesso");
         }
 
