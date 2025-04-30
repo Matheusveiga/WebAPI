@@ -1,40 +1,43 @@
 # 📦 WebAPI - Catálogo de Produtos
 
-Este é um projeto de Web API desenvolvido com ASP.NET Core. A aplicação fornece endpoints para o gerenciamento de produtos, com funcionalidades de listagem, 
-criação, edição e remoção. Ideal para fins de aprendizado e base para sistemas de e-commerce ou catálogos.
+Este é um projeto de Web API desenvolvido com ASP.NET Core. A aplicação fornece endpoints com métodos assíncronos para o gerenciamento de produtos e categorias, com funcionalidades de listagem, 
+criação, edição e remoção. Ideal para fins de aprendizado e como base para sistemas de e-commerce ou catálogos.
 
 ## 🚀 Tecnologias Utilizadas
 
-- [.NET 8](https://dotnet.microsoft.com/en-us/)
+- [.NET 8](https://dotnet.microsoft.com/en-us/download/dotnet/8.0)
 - ASP.NET Core Web API
 - Entity Framework Core
-- SQL Server (LocalDB)
+- MySQL (padrão) ou outro banco configurável
 - Swagger (Swashbuckle)
 
 ## 📁 Estrutura do Projeto
 
 ```plaintext
 ├── Controllers/
-│   └── ProdutosController.cs
+│   ├── ProdutosController.cs
+│   └── CategoriasController.cs
 ├── Data/
 │   └── AppDbContext.cs
 ├── Models/
-│   └── Produto.cs
+│   ├── Produto.cs
+│   └── Categoria.cs
 ├── Migrations/
 ├── appsettings.json
 └── Program.cs
+```
 
-⚙️ Como Executar o Projeto
-Pré-requisitos
+## ⚙️ Como Executar o Projeto
 
-   - .NET 8 SDK
+### Pré-requisitos
 
-   - SQL Server LocalDB ou outra instância configurada
+- .NET 8 SDK instalado
+- Visual Studio, VS Code ou terminal
+- MySQL (ou configure sua base no `appsettings.json`)
 
-   - Visual Studio ou VS Code
+### Passos
 
-Passos
-
+```bash
 # Clone o repositório
 git clone https://github.com/Matheusveiga/WebAPI.git
 
@@ -49,42 +52,44 @@ dotnet ef database update
 
 # Execute a aplicação
 dotnet run
+```
 
-A aplicação estará disponível em: http://localhost:5155
+A aplicação estará disponível em: `https://localhost:5001` ou `http://localhost:5000`
 
-📓 Documentação da API
+## 📓 Documentação da API
 
 O Swagger está disponível para facilitar os testes dos endpoints:
 
-http://localhost:5155/swagger
+```
+https://localhost:5001/swagger
+```
 
-📌 Endpoints disponíveis
+## 📌 Endpoints disponíveis
 
-Método	          Rota	               Descrição
+| Método  | Rota                         | Descrição                             |
+|---------|------------------------------|----------------------------------------|
+| GET     | /produtos                    | Lista todos os produtos               |
+| GET     | /produtos/{id}               | Retorna um produto por ID             |
+| POST    | /produtos                    | Cria um novo produto                  |
+| PUT     | /produtos/{id}               | Atualiza um produto existente         |
+| DELETE  | /produtos/{id}               | Remove um produto                     |
+| GET     | /categorias                  | Lista todas as categorias             |
+| GET     | /categorias/{id}             | Retorna uma categoria por ID          |
+| GET     | /categorias/produtos         | Lista categorias com seus produtos    |
 
-GET	         /produtos	      Lista todos os produtos
-GET	         /produtos/{id}	      Retorna um produto por ID
-POST	         /produtos	      Cria um novo produto
-PUT	         /produtos/{id}	      Atualiza um produto existente
-DELETE	         /produtos/{id}	      Remove um produto
+## 📂 Migrations
 
+As migrations do EF Core estão salvas na pasta `Migrations/`.
 
-📂 Migrations
+Para criar uma nova migration:
 
-As migrations do EF Core estão salvas na pasta Migrations/.
-
-- Para criar uma nova migration:
-
+```bash
 dotnet ef migrations add NomeDaMigration
+```
 
-🛑 Observações
+## 🛑 Observações
 
-    Os arquivos appsettings.json e appsettings.Development.json não devem conter dados sensíveis como connection strings com usuário/senha. Utilize variáveis de ambiente em produção.
+- As configurações de conexão estão em `appsettings.json`. Evite incluir dados sensíveis diretamente no arquivo — prefira variáveis de ambiente em produção.
+- A string de conexão está configurada para SQLite, mas pode ser facilmente adaptada para SQL Server ou outro banco.
 
-    A conexão atual está configurada para SQL Server LocalDB. Você pode alterar a string de conexão em appsettings.json.
-
-📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo LICENSE para mais detalhes.
-
-Feito por Matheus Veiga
+Feito por [Matheus Veiga](https://www.linkedin.com/in/matheus-veiga-011566158/)
